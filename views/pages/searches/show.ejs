@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <% for(let book of books) {%> 
+    <div>
+      <img src="<%=book.img_url%>" alt="#">
+      <p><%=book.title %></p>
+      <p><%=book.author %> </p>
+      <p><%=book.summary %> </p>
+    </div>
+  <% } %>   
+</body>
+</html>
