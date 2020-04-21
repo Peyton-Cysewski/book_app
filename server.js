@@ -20,6 +20,6 @@ app.get('/', (req, res) => {
   res.render('index');
 });
 
-app.get('/home', (req, res) => {
-  res.send('Home Page');
+app.get('/searches/new', (req, res) => {
+  res.render('searches/new');
 })
