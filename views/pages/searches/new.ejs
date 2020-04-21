@@ -6,12 +6,16 @@
   <title>Document</title>
 </head>
 <body>
-  <form>
-    <input type="text" placeholder="Enter a title or author">
-    <label>Title</label>
-    <input name="title" type="radio">
-    <label>Author</label>
-    <input name="author" type="radio">
+  <form action="/google" method="POST">
+    <input name="searchString" type="text" placeholder="Enter a title or author">
+    <label>
+      Title
+      <input name="filter" value="title" type="radio">
+    </label>
+    <label>
+      Author
+      <input name="filter" value="author" type="radio">
+    </label>
     <button type="submit">Search the Google Books API</button>
   </form>
 </body>
