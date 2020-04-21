@@ -25,14 +25,14 @@ app.get('/searches/new', (req, res) => {
   res.render('searches/new');
 });
 
-app.post('/google', (req, res) => {
-  // console.log(req.body);
+app.post('/searches', (req, res) => {
   let url;
   if (req.body.filter === 'author'){
     url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${req.body.searchString}`
   } else if (req.body.filter === 'title'){
     url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${req.body.searchString}`
   }
+  console.log(url);
   superagent.get(url)
   .then(bookRes => {
     // console.log(bookRes.body.items[0].volumeInfo.imageLinks.thumbnail);
@@ -42,21 +42,25 @@ app.post('/google', (req, res) => {
 });
 
 function Book(data, index) {
-  console.log(data.volumeInfo.imageLinks.thumbnail, index, Boolean(data.volumeInfo.imageLinks.thumbnail))
-  if (data.volumeInfo.imageLinks.thumbnail) {
+  if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.thumbnail) {
+    console.log(data.volumeInfo.imageLinks.thumbnail, index, Boolean(data.volumeInfo.imageLinks.thumbnail));
     this.img_url = data.volumeInfo.imageLinks.thumbnail;
-  } else if (data.volumeInfo.imageLinks.smallThumbnail) {
-    this.img_url = data.volumeInfo.imageLinks.smallThumbnail
+  } else if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.smallThumbnail) {
+    this.img_url = data.volumeInfo.imageLinks.smallThumbnail;
   } else {
     this.img_url = 'default book img goes here';
   }
-  this.title = data.volumeInfo.title;
-  this.author = data.volumeInfo.authors.join(' ');
+  if (data.volumeInfo.title){
+    this.title = data.volumeInfo.title;
+  }
+  if (data.volumeInfo.authors){
+    this.author = data.volumeInfo.authors.join(' and ');
+  }
   if (data.volumeInfo.description) {
     this.summary = data.volumeInfo.description;
-  } else if (data.searchInfo.textSnippet) {
+  } else if (data.searchInfo && data.searchInfo.textSnippet) {
     this.sumamry = data.searchInfo.textSnippet;
   } else {
     this.summary = 'This book has no summary or description.';
-  };
+  }
 }
