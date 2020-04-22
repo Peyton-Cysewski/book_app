@@ -31,6 +31,7 @@ app.post('/searches', (req, res) => {
   .then(bookRes => {
     let bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx))
     console.log(bookArr);
+    res.render('searches/show', {books:bookArr});
     })
   .catch((err, req, res, next) => {errorHandler(err, req, res, next)})
 });
