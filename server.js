@@ -33,7 +33,7 @@ app.post('/searches', (req, res) => {
     console.log(bookArr);
     res.render('searches/show', {books:bookArr});
     })
-  .catch((err, req, res, next) => {errorHandler(err, req, res, next)})
+  .catch( (err) => {errorHandler(err, req, res)})
 });
 
 function Book(data, index) {
@@ -43,7 +43,11 @@ function Book(data, index) {
     this.img_url = 'default book img goes here';
   }
   this.title = data.volumeInfo.title || 'no title provided';
-  this.author = data.volumeInfo.authors.join(' and ') || 'no authors provided';
+  if (data.volumeInfo.authors) {
+    this.author = data.volumeInfo.authors.join(' and ');
+  } else {
+    this.author = 'no authors provided';
+  }
   if (data.volumeInfo.description) {
     this.summary = data.volumeInfo.description;
   } else if (data.searchInfo && data.searchInfo.textSnippet) { // the second condition may be redundant, but we are not completely sure so it doesn't hurt to keep the potential redundancy in place.
@@ -53,10 +57,10 @@ function Book(data, index) {
   }
 }
 
-function errorHandler(err, req, res, next) {
+function errorHandler(err, req, res) {
   console.log(err);
   res.status(500).send({
     errorMessage: 'An error was detected',
-    error: err
+    error: err,
   });
 }
