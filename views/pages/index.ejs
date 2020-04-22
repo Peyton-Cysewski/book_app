@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="/styles/style.css"></link>
-</head>
+  <%- include('../layout/head') %>
 <body>
-  <header>
-    <h1>Welcome to P&P book store!</h1>
-    <nav>
-      <ul>
-        <li><a href="/searches/new">Search</a></li>
-      </ul>
-    </nav>
-  </header>
+  <%- include('../layout/header') %>
   <main>
-    <p>This is the Home Page</p>
+    <% if(typeof(books) === 'string') {%>
+      <p>Your shelf has <%=books%> books</p>
+    <% } else if (typeof(books) === 'object') { %> 
+      <p>Your shelf has <%=bookCount%> books</p>
+      <% for(let book of books) {%> 
+        <section>
+          <img src="<%=book.img_url%>" alt="#">
+          <article>
+            <h2><%=book.title %></h2>
+            <h3><%=book.author %> </h3>
+          </article>
+          <form action="/books/<%=book.id%>" method="GET">
+            <button type="submit">View Details</button>
+          </form>
+        </section>
+      <% } %>  
+    <% } %> 
+        
   </main>
+  <%- include('../layout/footer') %>
 </body>
 </html>
