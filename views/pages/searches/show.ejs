@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/styles/style.css"></link>
+</head>
+<body>
+  <header>
+    <h1>Welcome to P&P book store!</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Search</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <% for(let book of books) {%> 
+      <section>
+        <img src="<%=book.img_url%>" alt="#">
+        <article>
+          <h2><%=book.title %></p>
+          <h3><%=book.author %> </p>
+          <p><%=book.summary %> </p>    
+        </article>
+      </section>
+    <% } %>   
+  </main>
+</body>
+</html>

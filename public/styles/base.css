@@ -1,4 +1,11 @@
 p {
-  font-size: 50px;
-  color: red;
+  font-size: 20px;
+  padding: 10px;
+}
+img {
+  width:300px;
+  margin: 15px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.8), 0 6px 20px 0 rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+  display: inline-block;
 }
