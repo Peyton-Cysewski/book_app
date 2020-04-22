@@ -16,16 +16,19 @@
     </nav>
   </header>
   <main>
-    <% for(let book of books) {%> 
-      <section>
-        <img src="<%=book.img_url%>" alt="#">
-        <article>
-          <h2><%=book.title %></p>
-          <h3><%=book.author %> </p>
-          <p><%=book.summary %> </p>    
-        </article>
-      </section>
-    <% } %>   
+    <form action="/searches" method="POST">
+      <input name="searchString" type="text" placeholder="Enter a title or author">
+      <label>
+        Title
+        <input name="filter" value="title" type="radio">
+      </label>
+      <label>
+        Author
+        <input name="filter" value="author" type="radio">
+      </label>
+      <button type="submit">Search the Google Books API</button>
+    </form>
+  
   </main>
 </body>
 </html>
