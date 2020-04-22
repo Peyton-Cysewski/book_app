@@ -6,7 +6,7 @@ const path = require('path');
 const superagent = require('superagent');
 const app = express();
 const cors = require('cors');
-const PORT = 3200;
+const PORT = process.env.PORT || 3200;
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
