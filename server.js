@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 require('dotenv').config();
 const express = require('express');
@@ -28,22 +28,19 @@ app.get('/searches/new', (req, res) => {
 app.post('/searches', (req, res) => {
   let url;
   if (req.body.filter === 'author'){
-    url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${req.body.searchString}`
+    url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${req.body.searchString}`;
   } else if (req.body.filter === 'title'){
-    url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${req.body.searchString}`
+    url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${req.body.searchString}`;
   }
-  console.log(url);
   superagent.get(url)
-  .then(bookRes => {
-    // console.log(bookRes.body.items[0].volumeInfo.imageLinks.thumbnail);
-    let bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx))
-    console.log(bookArr);
-    })
+    .then(bookRes => {
+      let bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx));
+      res.render('searches/show', {books:bookArr});
+    });
 });
 
-function Book(data, index) {
+function Book(data) {
   if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.thumbnail) {
-    console.log(data.volumeInfo.imageLinks.thumbnail, index, Boolean(data.volumeInfo.imageLinks.thumbnail));
     this.img_url = data.volumeInfo.imageLinks.thumbnail;
   } else if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.smallThumbnail) {
     this.img_url = data.volumeInfo.imageLinks.smallThumbnail;

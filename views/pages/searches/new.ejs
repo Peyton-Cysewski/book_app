@@ -4,19 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="/styles/style.css"></link>
 </head>
 <body>
-  <form action="/searches" method="POST">
-    <input name="searchString" type="text" placeholder="Enter a title or author">
-    <label>
-      Title
-      <input name="filter" value="title" type="radio">
-    </label>
-    <label>
-      Author
-      <input name="filter" value="author" type="radio">
-    </label>
-    <button type="submit">Search the Google Books API</button>
-  </form>
+  <header>
+    <h1>Welcome to P&P book store!</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Search</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <form action="/searches" method="POST">
+      <input name="searchString" type="text" placeholder="Enter a title or author">
+      <label>
+        Title
+        <input name="filter" value="title" type="radio">
+      </label>
+      <label>
+        Author
+        <input name="filter" value="author" type="radio">
+      </label>
+      <button type="submit">Search the Google Books API</button>
+    </form>
+  
+  </main>
 </body>
 </html>
