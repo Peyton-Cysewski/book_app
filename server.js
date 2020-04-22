@@ -6,7 +6,7 @@ const superagent = require('superagent');
 const pg = require('pg');
 const app = express();
 const cors = require('cors');
-const PORT = 3200; // add back in later: process.env.PORT ||
+const PORT = process.env.PORT || 3200;
 
 // this shouldn't need to be a thing lol
 // function newPort() {
@@ -92,10 +92,6 @@ app.post('/books', (req,res)=>{
       errorHandler('Error occured when adding book to Database',err,req,res);
     });
 });
-
-//
-
-
 
 
 function Book(data, idx) {
