@@ -34,13 +34,12 @@ app.post('/searches', (req, res) => {
   }
   superagent.get(url)
     .then(bookRes => {
-    // console.log(bookRes.body.items[0].volumeInfo.imageLinks.thumbnail);
       let bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx));
       res.render('searches/show', {books:bookArr});
     });
 });
 
-function Book(data, index) {
+function Book(data) {
   if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.thumbnail) {
     this.img_url = data.volumeInfo.imageLinks.thumbnail;
   } else if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.smallThumbnail) {
