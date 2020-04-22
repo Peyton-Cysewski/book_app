@@ -26,41 +26,36 @@ app.get('/searches/new', (req, res) => {
 });
 
 app.post('/searches', (req, res) => {
-  let url;
-  if (req.body.filter === 'author'){
-    url = `https://www.googleapis.com/books/v1/volumes?q=inauthor:${req.body.searchString}`
-  } else if (req.body.filter === 'title'){
-    url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${req.body.searchString}`
-  }
-  console.log(url);
+  let url = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.filter}:${req.body.searchString}`
   superagent.get(url)
   .then(bookRes => {
-    // console.log(bookRes.body.items[0].volumeInfo.imageLinks.thumbnail);
     let bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx))
     console.log(bookArr);
     })
+  .catch((err, req, res, next) => {errorHandler(err, req, res, next)})
 });
 
 function Book(data, index) {
-  if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.thumbnail) {
-    console.log(data.volumeInfo.imageLinks.thumbnail, index, Boolean(data.volumeInfo.imageLinks.thumbnail));
-    this.img_url = data.volumeInfo.imageLinks.thumbnail;
-  } else if (data.volumeInfo.imageLinks && data.volumeInfo.imageLinks.smallThumbnail) {
-    this.img_url = data.volumeInfo.imageLinks.smallThumbnail;
+  if (data.volumeInfo.imageLinks) {
+    this.img_url = data.volumeInfo.imageLinks.thumbnail || data.volumeInfo.imageLinks.smallThumbnail;
   } else {
     this.img_url = 'default book img goes here';
   }
-  if (data.volumeInfo.title){
-    this.title = data.volumeInfo.title;
-  }
-  if (data.volumeInfo.authors){
-    this.author = data.volumeInfo.authors.join(' and ');
-  }
+  this.title = data.volumeInfo.title || 'no title provided';
+  this.author = data.volumeInfo.authors.join(' and ') || 'no authors provided';
   if (data.volumeInfo.description) {
     this.summary = data.volumeInfo.description;
-  } else if (data.searchInfo && data.searchInfo.textSnippet) {
-    this.sumamry = data.searchInfo.textSnippet;
+  } else if (data.searchInfo && data.searchInfo.textSnippet) { // the second condition may be redundant, but we are not completely sure so it doesn't hurt to keep the potential redundancy in place.
+    this.summary = data.searchInfo.textSnippet;
   } else {
     this.summary = 'This book has no summary or description.';
   }
+}
+
+function errorHandler(err, req, res, next) {
+  console.log(err);
+  res.status(500).send({
+    errorMessage: 'An error was detected',
+    error: err
+  });
 }
