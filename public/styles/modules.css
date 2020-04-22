@@ -77,4 +77,8 @@ main section article p{
   main section {
     width:700px;
   }
+
+  footer {
+    width: 700px;
+  }
 }  

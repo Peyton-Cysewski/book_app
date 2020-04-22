@@ -55,6 +55,7 @@ app.get('/searches/new', (req, res) => {
 var bookArr=[];
 app.post('/searches', (req, res) => {
   let url = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.filter}:${req.body.searchString}`;
+  console.log(url);
   superagent.get(url)
     .then(bookRes => {
       bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx));
@@ -87,12 +88,12 @@ app.post('/books', (req,res)=>{
   dbClient.query(postQuery,postValue)
     .then(dbRes=>{
       console.log('successfully added to dababase');
+      res.status(204).send();
     })
     .catch((err)=>{
       errorHandler('Error occured when adding book to Database',err,req,res);
     });
 });
-
 
 function Book(data, idx) {
   if (data.volumeInfo.imageLinks) {
@@ -117,35 +118,35 @@ function Book(data, idx) {
 
   // checks whether .industryIdentifiers exists, then if it does it checks whether or not it has an ISBN # at the array index 0 or 1. If either the ISBN_10 # or ISBN_13 number exists at either index, then it preferences the ISBN_13 number. Otherwise, it if fails any of the conditions, then it returns a string saying it doesn't exist.
   if (data.volumeInfo.industryIdentifiers) {
-    console.log(data.volumeInfo.industryIdentifiers);
+    console.log(data.volumeInfo.industryIdentifiers[0].type.includes('ISBN_10'));
   }
-  if (data.volumeInfo.industryIdentifiers &&
-      ((data.volumeInfo.industryIdentifiers[0].type === 'ISBN_10' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_10') ||
-      (data.volumeInfo.industryIdentifiers[0].type === 'ISBN_13' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_13'))) {
-    if (data.volumeInfo.industryIdentifiers[0].type === 'ISBN_10' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_13') {
-      this.isbn = data.volumeInfo.industryIdentifiers[1].identifier || data.volumeInfo.industryIdentifiers[0].identifier;
-    } else if (data.volumeInfo.industryIdentifiers[0].type === 'ISBN_13' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_10') {
-      this.isbn = data.volumeInfo.industryIdentifiers[0].identifier || data.volumeInfo.industryIdentifiers[1].identifier;
-    } else {
-      this.isbn = 'This book has no ISBN identifier';
-    }
-  } else {
-    this.isbn = 'This book has no ISBN identifier';
-  }
-
-  // if (data.volumeInfo.industryIdentifiers) {
-  //   if (data.volumeInfo.industryIdentifiers[0].type.includes('ISBN_13')) {
-  //     this.isbn = data.volumeInfo.industryIdentifiers[0].identifier;
-  //   } else if (data.volumeInfo.industryIdentifiers[0].type.includes('ISBN_10') && (data.volumeInfo.industryIdentifiers.length===1)){
-  //     this.isbn = data.volumeInfo.industryIdentifiers[0].identifier;
-  //   } else if (data.volumeInfo.industryIdentifiers[1].type.includes('ISBN_13')) {
-  //     this.isbn = data.volumeInfo.industryIdentifiers[1].identifier;
+  // if (data.volumeInfo.industryIdentifiers &&
+  //     ((data.volumeInfo.industryIdentifiers[0].type === 'ISBN_10' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_10') ||
+  //     (data.volumeInfo.industryIdentifiers[0].type === 'ISBN_13' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_13'))) {
+  //   if (data.volumeInfo.industryIdentifiers[0].type === 'ISBN_10' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_13') {
+  //     this.isbn = data.volumeInfo.industryIdentifiers[1].identifier || data.volumeInfo.industryIdentifiers[0].identifier;
+  //   } else if (data.volumeInfo.industryIdentifiers[0].type === 'ISBN_13' || data.volumeInfo.industryIdentifiers[1].type === 'ISBN_10') {
+  //     this.isbn = data.volumeInfo.industryIdentifiers[0].identifier || data.volumeInfo.industryIdentifiers[1].identifier;
   //   } else {
   //     this.isbn = 'This book has no ISBN identifier';
   //   }
   // } else {
   //   this.isbn = 'This book has no ISBN identifier';
   // }
+
+  if (data.volumeInfo.industryIdentifiers) {
+    if (data.volumeInfo.industryIdentifiers[0].type.includes('ISBN_13')) {
+      this.isbn = data.volumeInfo.industryIdentifiers[0].identifier;
+    } else if (data.volumeInfo.industryIdentifiers[0].type.includes('ISBN_10') && (data.volumeInfo.industryIdentifiers.length===1)) {
+      this.isbn = data.volumeInfo.industryIdentifiers[0].identifier;
+    } else if (data.volumeInfo.industryIdentifiers.length>1 && data.volumeInfo.industryIdentifiers[1].type.includes('ISBN_13')) {
+      this.isbn = data.volumeInfo.industryIdentifiers[1].identifier;
+    } else {
+      this.isbn = 'This book has no ISBN identifier';
+    }
+  } else {
+    this.isbn = 'This book has no ISBN identifier';
+  }
 
   this.index = idx;
 }
