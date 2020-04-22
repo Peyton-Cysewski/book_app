@@ -26,17 +26,17 @@ app.get('/searches/new', (req, res) => {
 });
 
 app.post('/searches', (req, res) => {
-  let url = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.filter}:${req.body.searchString}`
+  let url = `https://www.googleapis.com/books/v1/volumes?q=in${req.body.filter}:${req.body.searchString}`;
   superagent.get(url)
-  .then(bookRes => {
-    let bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx))
-    console.log(bookArr);
-    res.render('searches/show', {books:bookArr});
+    .then(bookRes => {
+      let bookArr = bookRes.body.items.map( (book, idx) => new Book(book, idx));
+      // console.log(bookArr);
+      res.render('searches/show', {books:bookArr});
     })
-  .catch( (err) => {errorHandler(err, req, res)})
+    .catch( (err) => {errorHandler(err, req, res);});
 });
 
-function Book(data, index) {
+function Book(data) {
   if (data.volumeInfo.imageLinks) {
     this.img_url = data.volumeInfo.imageLinks.thumbnail || data.volumeInfo.imageLinks.smallThumbnail;
   } else {
