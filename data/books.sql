@@ -8,4 +8,4 @@ CREATE TABLE books (
   img_url VARCHAR(255),
   descript TEXT,
   bookshelf VARCHAR(255)
-)
+);
