@@ -13,7 +13,7 @@
           <p><%=book.summary %> </p>    
         </article>
         <form action="/books" method="POST">
-          <button type="submit" name="addTo" value="<%=book.index %> ">Add to My Collection</button>
+          <button class="addToCollection" type="submit" name="addTo" value="<%=book.index %> ">Add to My Collection</button>
         </form>
       </section>
     <% } %>   
