@@ -1,4 +1,4 @@
-<section>
+<section id="details">
   <img src="<%=book.img_url%>">
   <article>
     <h2><%=book.title %></h2>
@@ -7,4 +7,10 @@
     <p class="isbn">ISBN: <%=book.isbn%></p>
     <p class="bookShelf">Bookshelf: <%=book.bookshelf%></p>
   </article>
+  <div id="updateButtonContainer">
+    <button id="showUpdateInfo" type="button">Update Info</button>
+  </div>
+  <form action="/books/<%= book.id %>?_method=DELETE" method="POST">
+    <button id="deleteButton" type="submit">Remove Book</button>
+  </form>
 </section>
