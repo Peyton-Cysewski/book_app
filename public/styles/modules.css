@@ -82,3 +82,11 @@ main section article p{
     width: 700px;
   }
 }  
+
+#updateForm {
+  display: none;
+}
+
+#updateForm input, textarea, button {
+  display: inline-block;
+}
